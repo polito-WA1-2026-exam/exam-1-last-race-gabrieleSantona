@@ -76,7 +76,6 @@ function PlanningPhase({ stations, segments, interchanges, start, destination, o
                 onRemoveLast={handleRemoveLast}
                 startId={start.id}
                 destinationId={destination.id}
-                interchanges={interchanges}
               />
               <div className="text-end mt-3">
                 <Button variant="success" onClick={handleSubmit}>
