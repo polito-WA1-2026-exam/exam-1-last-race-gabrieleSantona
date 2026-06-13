@@ -90,7 +90,7 @@ export function getAvailableNeighbors(currentStationId, currentLineIds, usedSegm
 
 // Legacy: full route validation (kept for reference, not used in new flow)
 export function validateRoute(segments, startId, destId) {
-  if (!segments || segments.length === 0) return false;
+  if (!segments || segments.length < 3) return false;
   let currentStation = startId;
   const usedSegments = new Set();
   let currentLines = null;

@@ -30,13 +30,10 @@
 - `POST /api/games`
   - Requires authentication. Starts a new game; server randomly assigns start and destination (BFS distance ≥ 3).
   - Response 201: `{ gameId, start: {id, name}, destination: {id, name} }`
-- `POST /api/games/:id/submit`
-  - Requires authentication. Submits the planned route for validation.
-  - Body: `{ segments: [{station_a_id, station_b_id}] }`
-  - Response 200: `{ valid: true }` or `{ valid: false, score: 0 }`
-- `POST /api/games/:id/execute`
-  - Requires authentication. Executes the valid route: picks a random event per segment server-side.
-  - Response 200: `{ score, steps: [{position, station_a, station_b, event: {id, description, effect}, coins_after}] }`
+- `POST /api/games/:id/submit-route`
+  - Requires authentication. Validates the submitted route and, if valid, executes it server-side (picks a random event per segment). If invalid, returns score 0.
+  - Body: `{ route: [{station_a_id, station_b_id}] }`
+  - Response 200: `{ valid: true, score, steps: [{position, station_a, station_b, event: {id, description, effect}, coins_after}] }` or `{ valid: false, score: 0 }`
 - `GET /api/ranking`
   - Public. Returns each user's best score across all completed games.
   - Response 200: `{ ranking: [{username, best_score}] }`
@@ -66,12 +63,13 @@
 - `ExecutionPhase` (in `game/ExecutionPhase.jsx`): Reveals journey steps one at a time, showing each event and updated coin total.
 - `ResultPhase` (in `game/ResultPhase.jsx`): Displays final score and offers a "Play Again" button.
 - `NetworkMap` (in `game/NetworkMap.jsx`): Reusable map component; `showLines=true` renders coloured line diagrams, `showLines=false` renders station names only.
-- `SegmentPicker` (in `game/SegmentPicker.jsx`): Interactive segment list for building the route; highlights the current chain and only enables connectable next segments.
+- `SegmentPicker` (in `game/SegmentPicker.jsx`): Interactive segment list for building the route; highlights the current route chain and lists all unused segments for selection.
 - `Timer` (in `game/Timer.jsx`): 90-second countdown with progress bar; fires `onExpire` callback when time runs out.
 
 ## Screenshot
 
-*(To be added before submission)*
+![Ranking Page](./img/ranking.png)
+![Game in Progress](./img/game.png)
 
 ## Users Credentials
 
