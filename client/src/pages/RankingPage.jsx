@@ -18,7 +18,7 @@ function RankingPage() {
 
   return (
     <Container className="py-5">
-      <h2 className="mb-4 text-center">🏆 Global Ranking</h2>
+      <h2 className="mb-4 text-center text-dark">🏆 Global Ranking</h2>
 
       {loading && (
         <div className="text-center">

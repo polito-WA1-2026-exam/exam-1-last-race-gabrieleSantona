@@ -43,9 +43,9 @@ function SegmentPicker({ segments, route, onAdd, onRemoveLast, startId, destinat
   const tail            = currentTail();
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
       {/* Route chain display */}
-      <div className="mb-3 p-2 bg-light rounded border">
+      <div className="mb-3 p-2 bg-light rounded border" style={{ flexShrink: 0 }}>
         <small className="text-muted d-block mb-1">Your route:</small>
         <div className="d-flex flex-wrap align-items-center gap-1">
           {chain.map((sid, idx) => (
@@ -77,11 +77,13 @@ function SegmentPicker({ segments, route, onAdd, onRemoveLast, startId, destinat
         )}
       </div>
 
-      {/* Segment list — all unused segments selectable */}
-      <small className="text-muted d-block mb-1">
-        Segments ({unusedSegments.length} remaining):
-      </small>
-      <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+      {/* Segment list */}
+      <div style={{ flexShrink: 0, marginBottom: '0.5rem' }}>
+        <small className="text-muted d-block">
+          Segments ({unusedSegments.length} remaining):
+        </small>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
         <ListGroup>
           {unusedSegments.map(seg => {
             const key = segKey(seg.station_a_id, seg.station_b_id);
@@ -97,11 +99,9 @@ function SegmentPicker({ segments, route, onAdd, onRemoveLast, startId, destinat
                 key={key}
                 onClick={() => onAdd(seg)}
                 className="d-flex justify-content-between align-items-center py-2"
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'pointer', fontSize: 13 }}
               >
-                <span style={{ fontSize: 13 }}>
-                  {leftName} — {rightName}
-                </span>
+                <span>{leftName} — {rightName}</span>
               </ListGroup.Item>
             );
           })}
