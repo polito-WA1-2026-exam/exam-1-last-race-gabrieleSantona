@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Card, Button, Badge, Table, Spinner } from 'react-bootstrap';
 import { getRanking } from '../api/api.js';
-
-const MEDALS = ['🥇', '🥈', '🥉'];
+import { MEDALS } from '../api/models.js';
 
 function ResultPhase({ score, previousBest, improved, invalidRoute, onPlayAgain }) {
   const [ranking, setRanking]   = useState([]);

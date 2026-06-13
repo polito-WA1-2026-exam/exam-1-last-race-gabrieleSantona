@@ -10,12 +10,14 @@
 
 ## API Server
 
+All APIs include request validation using `express-validator`. Invalid requests return 422 Unprocessable Entity with detailed error messages.
+
 - `POST /api/sessions`
-  - Body: `{ username, password }`
-  - Response 200: `{ id, username }` | 401 on wrong credentials
+  - Validates: `username` (string, not empty), `password` (string, not empty)
+  - Response 201: `{ id, username }` | 401 on wrong credentials | 422 on validation error
 - `DELETE /api/sessions/current`
   - Requires authentication. Logs out the current user.
-  - Response 200: `{}`
+  - Response 204: (no content)
 - `GET /api/sessions/current`
   - Response 200: `{ id, username }` | 401 if not authenticated
 - `GET /api/network/full`
@@ -23,17 +25,18 @@
   - Response 200: `{ stations: [{id, name}], lines: [{id, name, color, stations: [ids], segments: [{station_a, station_b}]}] }`
 - `GET /api/network/segments`
   - Requires authentication. Returns all segments (without line attribution) for the Planning phase.
-  - Response 200: `{ segments: [{station_a_id, station_a_name, station_b_id, station_b_name}] }`
+  - Response 200: `{ segments: [{station_a_id, station_a_name, station_b_id, station_b_name}], interchanges: [ids] }`
 - `GET /api/network/stations`
   - Requires authentication. Returns station names only for the Planning phase map.
   - Response 200: `{ stations: [{id, name}] }`
 - `POST /api/games`
   - Requires authentication. Starts a new game; server randomly assigns start and destination (BFS distance ≥ 3).
-  - Response 201: `{ gameId, start: {id, name}, destination: {id, name} }`
+  - Response 201: `{ gameId, start: {id, name}, destination: {id, name}, coins: 20 }`
 - `POST /api/games/:id/submit-route`
-  - Requires authentication. Validates the submitted route and, if valid, executes it server-side (picks a random event per segment). If invalid, returns score 0.
-  - Body: `{ route: [{station_a_id, station_b_id}] }`
-  - Response 200: `{ valid: true, score, steps: [{position, station_a, station_b, event: {id, description, effect}, coins_after}] }` or `{ valid: false, score: 0 }`
+  - Requires authentication. Validates: `id` (positive integer), `segments` (non-empty array), each segment has `station_a_id` and `station_b_id` (positive integers).
+  - Body: `{ segments: [{station_a_id, station_b_id}] }`
+  - Response 200: `{ valid: true, steps: [{station_a, station_b, event: {description, effect}, coins_after}], finalScore, previousBest, improved }` or `{ valid: false, steps: [], finalScore: 0, previousBest, improved: false }`
+  - Response 422: validation error
 - `GET /api/ranking`
   - Public. Returns each user's best score across all completed games.
   - Response 200: `{ ranking: [{username, best_score}] }`

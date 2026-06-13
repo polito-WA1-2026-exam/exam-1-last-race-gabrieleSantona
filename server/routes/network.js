@@ -1,12 +1,8 @@
 import { Router } from 'express';
 import db from '../db.js';
+import { requireAuth } from '../middleware.js';
 
 const router = Router();
-
-function requireAuth(req, res, next) {
-  if (!req.isAuthenticated()) return res.status(401).json({ error: 'Not authenticated.' });
-  next();
-}
 
 router.get('/full', requireAuth, (req, res) => {
   const stations = db.prepare('SELECT id, name FROM stations ORDER BY id').all();

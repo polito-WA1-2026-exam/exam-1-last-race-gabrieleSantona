@@ -1,3 +1,5 @@
+import { GameStart, GameResult } from './models.js';
+
 const BASE = 'http://localhost:3001';
 
 async function request(method, path, body) {
@@ -24,7 +26,7 @@ export const logout         = ()                     => request('DELETE', '/api/
 export const getFullNetwork = ()                     => request('GET',    '/api/network/full');
 export const getSegments    = ()                     => request('GET',    '/api/network/segments');
 
-export const startGame      = ()                     => request('POST',   '/api/games', {});
-export const submitRoute    = (gameId, segments)     => request('POST',   `/api/games/${gameId}/submit-route`, { segments });
+export const startGame      = () => request('POST', '/api/games', {}).then(raw => new GameStart(raw));
+export const submitRoute    = (gameId, segments) => request('POST', `/api/games/${gameId}/submit-route`, { segments }).then(raw => new GameResult(raw));
 
 export const getRanking     = ()                     => request('GET',    '/api/ranking');

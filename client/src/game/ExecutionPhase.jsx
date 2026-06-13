@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Badge, ListGroup } from 'react-bootstrap';
+import { INITIAL_COINS } from '../api/models.js';
 
 function effectLabel(effect) {
   if (effect > 0) return <Badge bg="success">+{effect} coins</Badge>;
@@ -21,7 +22,7 @@ function ExecutionPhase({ steps, finalScore, onFinish }) {
 
   const currentStep = steps[revealed - 1] ?? null;
   const done        = revealed === steps.length;
-  const coins       = currentStep?.coins_after ?? 20;
+  const coins       = currentStep?.coins_after ?? INITIAL_COINS;
 
   return (
     <Container className="py-4" style={{ maxWidth: 820 }}>
@@ -68,7 +69,7 @@ function ExecutionPhase({ steps, finalScore, onFinish }) {
               <div className="mb-4">
                 <small className="text-muted d-block mb-1">Coins</small>
                 <span
-                  className={coins > 20 ? 'text-success' : coins < 20 ? 'text-danger' : 'text-info'}
+                  className={coins > INITIAL_COINS ? 'text-success' : coins < INITIAL_COINS ? 'text-danger' : 'text-info'}
                   style={{
                     fontSize: 64,
                     fontWeight: 700,

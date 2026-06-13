@@ -1,16 +1,23 @@
 import { Router } from 'express';
+import { body, param, validationResult } from 'express-validator';
 import db from '../db.js';
 import { bfs, adjacency, validateRoute } from '../network.js';
+import { requireAuth } from '../middleware.js';
 
 const router = Router();
 
-function requireAuth(req, res, next) {
-  if (!req.isAuthenticated()) return res.status(401).json({ error: 'Not authenticated.' });
-  next();
-}
+const INITIAL_COINS = 20;
 
 function stationById(id) {
   return db.prepare('SELECT id, name FROM stations WHERE id = ?').get(id);
+}
+
+function buildStartResponse(gameId, start, destination) {
+  return { gameId, start, destination, coins: INITIAL_COINS };
+}
+
+function buildSubmitResponse({ valid, steps = [], finalScore = 0, previousBest, improved = false }) {
+  return { valid, steps, finalScore, previousBest, improved };
 }
 
 // POST /api/games — start a new game
@@ -35,79 +42,80 @@ router.post('/', requireAuth, (req, res) => {
   const result = db.prepare(
     `INSERT INTO games
        (user_id, start_id, destination_id, current_station_id, current_line_ids, score, completed_at)
-     VALUES (?, ?, ?, ?, NULL, 20, NULL)`
-  ).run(req.user.id, start, dest, start);
+     VALUES (?, ?, ?, ?, NULL, ?, NULL)`
+  ).run(req.user.id, start, dest, start, INITIAL_COINS);
 
   const gameId = result.lastInsertRowid;
 
-  res.status(201).json({
-    gameId,
-    start:       stationById(start),
-    destination: stationById(dest),
-    coins:       20,
-  });
+  res.status(201).json(buildStartResponse(gameId, stationById(start), stationById(dest)));
 });
 
 // POST /api/games/:id/submit-route — validate a planned route and apply events
-router.post('/:id/submit-route', requireAuth, (req, res) => {
-  const gameId           = Number(req.params.id);
-  const submittedSegments = req.body.segments;
+router.post('/:id/submit-route',
+  requireAuth,
+  param('id').isInt({ min: 1 }).toInt(),
+  body('segments').isArray({ min: 1 }),
+  body('segments.*.station_a_id').isInt({ min: 1 }),
+  body('segments.*.station_b_id').isInt({ min: 1 }),
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
 
-  if (!Array.isArray(submittedSegments)) {
-    return res.status(400).json({ error: 'segments array is required.' });
-  }
+    const gameId           = req.params.id;
+    const submittedSegments = req.body.segments;
 
-  const game = db.prepare('SELECT * FROM games WHERE id = ?').get(gameId);
-  if (!game)                        return res.status(404).json({ error: 'Game not found.' });
-  if (game.user_id !== req.user.id) return res.status(403).json({ error: 'Forbidden.' });
-  if (game.completed_at !== null)   return res.status(400).json({ error: 'Game already completed.' });
+    const game = db.prepare('SELECT * FROM games WHERE id = ?').get(gameId);
+    if (!game)                        return res.status(404).json({ error: 'Game not found.' });
+    if (game.user_id !== req.user.id) return res.status(403).json({ error: 'Forbidden.' });
+    if (game.completed_at !== null)   return res.status(400).json({ error: 'Game already completed.' });
 
-  const valid = validateRoute(submittedSegments, game.start_id, game.destination_id);
+    const valid = validateRoute(submittedSegments, game.start_id, game.destination_id);
 
-  // Fetch previous best before marking this game complete (exclude current game)
-  const prevRow      = db.prepare(
-    'SELECT MAX(score) AS best FROM games WHERE user_id = ? AND id != ? AND completed_at IS NOT NULL'
-  ).get(req.user.id, gameId);
-  const previousBest = prevRow?.best ?? null;
+    // Fetch previous best before marking this game complete (exclude current game)
+    const prevRow      = db.prepare(
+      'SELECT MAX(score) AS best FROM games WHERE user_id = ? AND id != ? AND completed_at IS NOT NULL'
+    ).get(req.user.id, gameId);
+    const previousBest = prevRow?.best ?? null;
 
-  if (!valid) {
-    db.prepare('UPDATE games SET score = 0, completed_at = ? WHERE id = ?')
-      .run(new Date().toISOString(), gameId);
-    return res.json({ valid: false, steps: [], finalScore: 0, previousBest, improved: false });
-  }
-
-  const allStations = new Map(
-    db.prepare('SELECT id, name FROM stations').all().map(s => [s.id, { id: s.id, name: s.name }])
-  );
-  const events = db.prepare('SELECT * FROM events').all();
-  const steps  = [];
-  let coins    = 20;
-
-  db.transaction(() => {
-    for (let i = 0; i < submittedSegments.length; i++) {
-      const seg   = submittedSegments[i];
-      const event = events[Math.floor(Math.random() * events.length)];
-      coins = Math.max(0, coins + event.effect);
-
-      db.prepare(
-        `INSERT INTO game_segments (game_id, position, station_a_id, station_b_id, event_id, coins_after)
-         VALUES (?, ?, ?, ?, ?, ?)`
-      ).run(gameId, i + 1, seg.station_a_id, seg.station_b_id, event.id, coins);
-
-      steps.push({
-        station_a:  allStations.get(seg.station_a_id),
-        station_b:  allStations.get(seg.station_b_id),
-        event:      { description: event.description, effect: event.effect },
-        coins_after: coins,
-      });
+    if (!valid) {
+      db.prepare('UPDATE games SET score = 0, completed_at = ? WHERE id = ?')
+        .run(new Date().toISOString(), gameId);
+      return res.json(buildSubmitResponse({ valid: false, previousBest, improved: false }));
     }
 
-    db.prepare('UPDATE games SET score = ?, completed_at = ? WHERE id = ?')
-      .run(coins, new Date().toISOString(), gameId);
-  })();
+    const allStations = new Map(
+      db.prepare('SELECT id, name FROM stations').all().map(s => [s.id, { id: s.id, name: s.name }])
+    );
+    const events = db.prepare('SELECT * FROM events').all();
+    const steps  = [];
+    let coins    = INITIAL_COINS;
 
-  const improved = coins > (previousBest ?? 0);
-  return res.json({ valid: true, steps, finalScore: coins, previousBest, improved });
-});
+    db.transaction(() => {
+      for (let i = 0; i < submittedSegments.length; i++) {
+        const seg   = submittedSegments[i];
+        const event = events[Math.floor(Math.random() * events.length)];
+        coins = Math.max(0, coins + event.effect);
+
+        db.prepare(
+          `INSERT INTO game_segments (game_id, position, station_a_id, station_b_id, event_id, coins_after)
+           VALUES (?, ?, ?, ?, ?, ?)`
+        ).run(gameId, i + 1, seg.station_a_id, seg.station_b_id, event.id, coins);
+
+        steps.push({
+          station_a:  allStations.get(seg.station_a_id),
+          station_b:  allStations.get(seg.station_b_id),
+          event:      { description: event.description, effect: event.effect },
+          coins_after: coins,
+        });
+      }
+
+      db.prepare('UPDATE games SET score = ?, completed_at = ? WHERE id = ?')
+        .run(coins, new Date().toISOString(), gameId);
+    })();
+
+    const improved = coins > (previousBest ?? 0);
+    return res.json(buildSubmitResponse({ valid: true, steps, finalScore: coins, previousBest, improved }));
+  }
+);
 
 export default router;

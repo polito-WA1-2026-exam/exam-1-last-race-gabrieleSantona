@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Table, Spinner, Alert, Badge } from 'react-bootstrap';
 import { getRanking } from '../api/api.js';
-
-const MEDALS = ['🥇', '🥈', '🥉'];
+import { MEDALS } from '../api/models.js';
 
 function RankingPage() {
   const [ranking, setRanking] = useState([]);
