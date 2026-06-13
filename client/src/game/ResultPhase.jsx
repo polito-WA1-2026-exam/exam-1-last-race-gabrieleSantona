@@ -24,7 +24,7 @@ function ResultPhase({ score, previousBest, improved, invalidRoute, onPlayAgain 
         <Card className="text-center retro-victory-card mb-4">
           <Card.Body className="py-5">
             <div style={{ fontSize: 72 }}>🏆</div>
-            <h2 className="mt-3 fw-bold" style={{ color: '#ffd700' }}>New Personal Best!</h2>
+            <h2 className="mt-3 fw-bold" style={{ color: 'var(--neon-cyan)' }}>New Personal Best!</h2>
             <p className="text-muted mb-4">You smashed your previous record.</p>
 
             <div className="d-flex justify-content-center align-items-center gap-4 mb-4 flex-wrap">
