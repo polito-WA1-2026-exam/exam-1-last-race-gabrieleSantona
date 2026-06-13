@@ -1,7 +1,246 @@
+/* ─── Navbar ─────────────────────────────────────────────────────────────── */
+.navbar {
+  background: #000 !important;
+  border-bottom: 2px solid var(--neon-green);
+  box-shadow: 0 0 16px rgba(0, 255, 65, 0.35);
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+}
+.navbar-brand, .nav-link, .navbar-text {
+  color: var(--neon-green) !important;
+}
+.nav-link:hover, .navbar-brand:hover {
+  color: var(--neon-amber) !important;
+  text-shadow: 0 0 8px var(--neon-amber);
+}
+
+/* ─── Cards ──────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--neon-green);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.15);
+  color: var(--neon-green);
+  border-radius: 0;
+}
+.card-header {
+  background: #061006;
+  border-bottom: 1px solid var(--neon-green);
+  color: var(--neon-amber);
+  font-family: 'VT323', monospace;
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+}
+.card-footer {
+  background: #061006;
+  border-top: 1px solid var(--neon-green);
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────────── */
+.btn {
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  border-radius: 0;
+  transition: box-shadow 0.15s ease;
+}
+.btn-primary {
+  background: transparent;
+  border: 2px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  color: #000;
+  box-shadow: 0 0 14px var(--neon-cyan);
+}
+.btn-success {
+  background: transparent;
+  border: 2px solid var(--neon-green);
+  color: var(--neon-green);
+}
+.btn-success:hover, .btn-success:focus, .btn-success:active {
+  background: var(--neon-green);
+  border-color: var(--neon-green);
+  color: #000;
+  box-shadow: 0 0 14px var(--neon-green);
+}
+.btn-outline-danger {
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+  border-radius: 0;
+}
+.btn-outline-danger:hover {
+  background: var(--neon-red);
+  color: #000;
+  box-shadow: 0 0 10px var(--neon-red);
+}
+.btn:disabled {
+  opacity: 0.4;
+}
+
+/* ─── Badges ─────────────────────────────────────────────────────────────── */
+.badge {
+  border-radius: 0;
+  letter-spacing: 1px;
+}
+.badge.bg-primary   { background: var(--neon-cyan) !important;  color: #000; }
+.badge.bg-success   { background: var(--neon-green) !important; color: #000; }
+.badge.bg-warning   { background: var(--neon-amber) !important; color: #000; }
+.badge.bg-danger    { background: var(--neon-red) !important;   color: #000; }
+.badge.bg-secondary { background: #0d1a0d !important; color: var(--neon-cyan); border: 1px solid var(--neon-cyan); font-weight: bold; }
+.badge.bg-light     { background: #000 !important; color: var(--neon-green) !important; border: 1px solid var(--neon-green); font-weight: bold; }
+
+/* ─── List Group ─────────────────────────────────────────────────────────── */
+.list-group-item {
+  background: var(--card-bg);
+  border-color: var(--border);
+  color: var(--neon-green);
+  font-family: 'Share Tech Mono', monospace;
+}
+.list-group-item:hover {
+  background: #122a12;
+  color: var(--neon-amber);
+}
+.list-group-item.disabled, .list-group-item:disabled {
+  background: #060e06;
+  color: var(--dim-green);
+}
+.list-group-item-action:focus {
+  background: #122a12;
+  color: var(--neon-green);
+}
+
+/* ─── Forms ──────────────────────────────────────────────────────────────── */
+.form-label {
+  color: var(--neon-amber);
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+.form-control {
+  background: var(--input-bg);
+  border: 1px solid var(--neon-green);
+  color: var(--neon-green);
+  font-family: 'Share Tech Mono', monospace;
+  border-radius: 0;
+}
+.form-control:focus {
+  background: var(--input-bg);
+  border-color: var(--neon-amber);
+  color: var(--neon-green);
+  box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+}
+.form-control::placeholder { color: #2a6a3a; }
+
+/* ─── Alerts ─────────────────────────────────────────────────────────────── */
+.alert-danger {
+  background: #1a060a;
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+  border-radius: 0;
+}
+
+/* ─── Tables ─────────────────────────────────────────────────────────────── */
+.table {
+  --bs-table-bg: var(--card-bg);
+  --bs-table-color: var(--neon-green);
+  --bs-table-border-color: var(--border);
+  --bs-table-striped-bg: #0a120a;
+  --bs-table-hover-bg: #122a12;
+  border-radius: 0;
+}
+.table-dark, thead.table-dark {
+  --bs-table-bg: #000;
+  --bs-table-color: var(--neon-amber);
+  --bs-table-border-color: var(--neon-green);
+}
+.table-warning {
+  --bs-table-bg: #1a1400;
+  --bs-table-color: var(--neon-amber);
+}
+
+/* ─── Progress (Timer) ───────────────────────────────────────────────────── */
+.progress {
+  background: #060e06;
+  border: 1px solid var(--neon-green);
+  border-radius: 0;
+  height: 8px;
+}
+.progress-bar          { background: var(--neon-green);  box-shadow: 0 0 6px var(--neon-green); }
+.progress-bar.bg-warning { background: var(--neon-amber); box-shadow: 0 0 6px var(--neon-amber); }
+.progress-bar.bg-danger  { background: var(--neon-red);   box-shadow: 0 0 6px var(--neon-red); }
+
+/* ─── Text utilities ─────────────────────────────────────────────────────── */
+.text-muted   { color: var(--dim-green) !important; }
+.text-dark    { color: var(--neon-green) !important; }
+.text-success { color: var(--neon-green) !important; }
+.text-danger  { color: var(--neon-red) !important; }
+.text-info    { color: var(--neon-cyan) !important; }
+.text-warning { color: var(--neon-amber) !important; }
+
+/* ─── Background utilities ───────────────────────────────────────────────── */
+.bg-light          { background-color: #061006 !important; }
+.bg-primary        { background-color: var(--neon-cyan) !important; }
+.bg-primary.bg-opacity-10 { background-color: rgba(0, 229, 255, 0.08) !important; }
+
+/* ─── Spinner ────────────────────────────────────────────────────────────── */
+.spinner-border { color: var(--neon-green); }
+
+/* ─── Custom: retro event box (ExecutionPhase) ───────────────────────────── */
+.retro-event-box {
+  background: #061006;
+  border: 1px solid var(--neon-green);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.25);
+  color: var(--neon-green);
+}
+
+/* ─── Custom: retro victory card (ResultPhase) ───────────────────────────── */
+.retro-victory-card {
+  background: #0d1400 !important;
+  border-color: var(--neon-amber) !important;
+  box-shadow: 0 0 24px rgba(255, 215, 0, 0.35) !important;
+}
+
+/* ─── Network map ────────────────────────────────────────────────────────── */
 .network-map {
   overflow-x: auto;
 }
-
 .station-box {
   white-space: nowrap;
+  border-radius: 0 !important;
+}
+
+/* ─── SegmentPicker route chain box ──────────────────────────────────────── */
+.segment-picker-route {
+  background: #061006 !important;
+  border: 1px solid var(--neon-green) !important;
+  border-radius: 0 !important;
+}
+
+/* ─── Borders ────────────────────────────────────────────────────────────── */
+.border         { border-color: var(--neon-green) !important; }
+.border-primary { border-color: var(--neon-cyan) !important; }
+.border-2       { border-width: 2px !important; }
+
+/* ─── Scrollbar (stations card) ──────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+::-webkit-scrollbar-track {
+  background: #061006;
+  border-left: 1px solid var(--border);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--neon-green);
+  border: 1px solid var(--neon-green);
+  box-shadow: inset 0 0 6px rgba(0, 255, 65, 0.5), 0 0 6px rgba(0, 255, 65, 0.4);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  box-shadow: inset 0 0 8px rgba(0, 229, 255, 0.5), 0 0 10px var(--neon-cyan);
+}
+
+.retro-scrollable {
+  overflow: hidden;
 }

@@ -68,11 +68,12 @@ function ExecutionPhase({ steps, finalScore, onFinish }) {
               <div className="mb-4">
                 <small className="text-muted d-block mb-1">Coins</small>
                 <span
+                  className={coins > 20 ? 'text-success' : coins < 20 ? 'text-danger' : 'text-info'}
                   style={{
                     fontSize: 64,
                     fontWeight: 700,
-                    color: coins > 20 ? '#198754' : coins < 20 ? '#dc3545' : '#0d6efd',
                     lineHeight: 1,
+                    textShadow: '0 0 12px currentColor',
                   }}
                 >
                   {coins}
@@ -82,8 +83,8 @@ function ExecutionPhase({ steps, finalScore, onFinish }) {
               {/* Latest event */}
               {currentStep && (
                 <div
-                  className="mx-auto p-3 rounded border"
-                  style={{ maxWidth: 340, background: '#f8f9fa' }}
+                  className="retro-event-box mx-auto p-3"
+                  style={{ maxWidth: 340 }}
                 >
                   <div className="fw-semibold mb-1" style={{ fontSize: 14 }}>
                     {currentStep.station_a.name} → {currentStep.station_b.name}

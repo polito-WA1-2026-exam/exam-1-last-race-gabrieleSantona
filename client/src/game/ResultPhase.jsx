@@ -22,10 +22,10 @@ function ResultPhase({ score, previousBest, improved, invalidRoute, onPlayAgain 
     return (
       <Container className="py-5" style={{ maxWidth: 560 }}>
         {/* Victory banner */}
-        <Card className="text-center border-warning shadow mb-4" style={{ background: 'linear-gradient(135deg, #fff8e1 0%, #fffde7 100%)' }}>
+        <Card className="text-center retro-victory-card mb-4">
           <Card.Body className="py-5">
             <div style={{ fontSize: 72 }}>🏆</div>
-            <h2 className="mt-3 fw-bold text-warning-emphasis">New Personal Best!</h2>
+            <h2 className="mt-3 fw-bold" style={{ color: '#ffd700' }}>New Personal Best!</h2>
             <p className="text-muted mb-4">You smashed your previous record.</p>
 
             <div className="d-flex justify-content-center align-items-center gap-4 mb-4 flex-wrap">
@@ -103,7 +103,7 @@ function ResultPhase({ score, previousBest, improved, invalidRoute, onPlayAgain 
 
           <h4 className="mb-2">
             Final Score:{' '}
-            <Badge bg={score > 0 ? 'warning' : 'secondary'} text="dark" style={{ fontSize: 22 }}>
+            <Badge bg={score > 0 ? 'primary' : 'secondary'} style={{ fontSize: 22 }}>
               {score} coins
             </Badge>
           </h4>

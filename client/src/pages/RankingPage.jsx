@@ -45,9 +45,9 @@ function RankingPage() {
             {ranking.map((entry, i) => (
               <tr key={entry.username}>
                 <td>{MEDALS[i] ?? i + 1}</td>
-                <td>{entry.username}</td>
+                <td style={{ fontWeight: 'bold', color: '#ffd700' }}>{entry.username}</td>
                 <td className="text-end">
-                  <Badge bg="warning" text="dark">{entry.best_score} coins</Badge>
+                  <Badge bg="primary">{entry.best_score} coins</Badge>
                 </td>
               </tr>
             ))}

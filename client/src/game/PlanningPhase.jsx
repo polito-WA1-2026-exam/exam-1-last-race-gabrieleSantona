@@ -55,9 +55,9 @@ function PlanningPhase({ stations, segments, interchanges, start, destination, o
           </Card>
 
           {/* Stations card */}
-          <Card style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <Card style={{ flex: 1, display: 'flex', flexDirection: 'column' }} className="retro-scrollable">
             <Card.Header><strong>Stations</strong></Card.Header>
-            <Card.Body style={{ flex: 1, overflow: 'hidden', overflowY: 'auto' }}>
+            <Card.Body style={{ flex: 1, minHeight: 0, overflow: 'hidden', overflowY: 'auto', scrollBehavior: 'smooth' }}>
               <p className="text-muted" style={{ fontSize: 12 }}>No line info shown during planning.</p>
               <NetworkMap stations={stations} showLines={false} interchangeIds={interchanges} />
             </Card.Body>

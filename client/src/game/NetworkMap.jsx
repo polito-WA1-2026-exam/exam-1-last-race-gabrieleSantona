@@ -37,16 +37,17 @@ function NetworkMap({ network, stations, showLines, interchangeIds }) {
                     <div
                       className="station-box px-2 py-1 text-center"
                       style={{
-                        border: `2px solid ${isInterchange ? '#333' : line.color}`,
-                        borderRadius: 6,
-                        background: isInterchange ? '#f8f9fa' : '#fff',
+                        border: `2px solid ${isInterchange ? '#00ff41' : line.color}`,
+                        borderRadius: 0,
+                        background: '#1a1a2e',
                         minWidth: 100,
                         fontSize: 12,
                         fontWeight: isInterchange ? 700 : 400,
+                        color: '#00ff41',
                       }}
                       title={isInterchange ? 'Interchange station' : ''}
                     >
-                      {isInterchange && <span style={{ fontSize: 10 }}>⬡ </span>}
+                      {isInterchange && <span style={{ fontSize: 11, color: '#00ff41' }}>⬡ </span>}
                       {stationName.get(sid)}
                     </div>
                     {idx < line.stations.length - 1 && (

@@ -112,18 +112,18 @@ if (seedNeeded) {
     insertLS.run(4, 12, 4);
 
     // Events — thematic underground travel incidents
-    insertEvent.run('Linea temporaneamente non disponibile, arrivi in ritardo', -2);
-    insertEvent.run('Non hai acquistato il biglietto: multa alla prossima fermata', -1);
-    insertEvent.run('Sciopero del personale di guida: treno soppresso', -3);
-    insertEvent.run('Guasto tecnico ai tornelli, fermo stazione', -2);
-    insertEvent.run('Emergenza in galleria, treno bloccato 10 minuti', -4);
-    insertEvent.run('Nessun imprevisto: viaggio regolare', 0);
-    insertEvent.run('Trovato un abbonamento mensile a terra: fortuna!', +2);
-    insertEvent.run('Treno in anticipo sulla tabella di marcia', +1);
-    insertEvent.run('Connessione diretta senza fermate intermedie', +3);
-    insertEvent.run('Posto a sedere libero, viaggio rilassante', +1);
-    insertEvent.run('Annuncio sbagliato: scendi alla fermata giusta per miracolo', -1);
-    insertEvent.run('Controllore distratto: passi senza biglietto', +4);
+    insertEvent.run('Line temporarily unavailable, arriving late', -2);
+    insertEvent.run('You didn\'t buy a ticket: fine at next stop', -1);
+    insertEvent.run('Driver strike: train canceled', -3);
+    insertEvent.run('Technical fault at turnstiles, station delay', -2);
+    insertEvent.run('Emergency in tunnel, train blocked 10 minutes', -4);
+    insertEvent.run('No incidents: regular journey', 0);
+    insertEvent.run('Found a monthly pass on the ground: lucky!', +2);
+    insertEvent.run('Train ahead of schedule', +1);
+    insertEvent.run('Direct connection without intermediate stops', +3);
+    insertEvent.run('Free seat available, relaxing journey', +1);
+    insertEvent.run('Wrong announcement: you got off at the right stop by luck', -1);
+    insertEvent.run('Distracted conductor: you pass without a ticket', +4);
 
     // Users
     const hash = (pw) => bcrypt.hashSync(pw, 10);

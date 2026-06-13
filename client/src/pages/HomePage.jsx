@@ -45,7 +45,7 @@ function HomePage() {
                   <Badge bg="secondary" className="me-2">Setup</Badge> — Study the full metro map: all lines, stations, and connections. When you're ready, start the game.
                 </li>
                 <li className="mb-2">
-                  <Badge bg="warning" text="dark" className="me-2">Planning</Badge> — The map hides the line information. You see only station names and a list of all connected pairs. Build your route by selecting segments in order. Each segment can only be used once. Submit before time runs out — or the route you've built so far is submitted automatically.
+                  <Badge bg="primary" className="me-2">Planning</Badge> — The map hides the line information. You see only station names and a list of all connected pairs. Build your route by selecting segments in order. Each segment can only be used once. Submit before time runs out — or the route you've built so far is submitted automatically.
                 </li>
                 <li className="mb-2">
                   <Badge bg="primary" className="me-2">Execution</Badge> — Your route is validated. If valid, you travel segment by segment: a random event occurs on each leg, gaining or losing coins (–4 to +4). Invalid or incomplete routes score 0.
@@ -63,7 +63,7 @@ function HomePage() {
                 <li className="mb-2">✔ The same segment cannot be used more than once.</li>
               </ul>
 
-              <p className="mb-0"><small>Each game starts with <Badge bg="warning" text="dark">20 coins</Badge>.</small></p>
+              <p className="mb-0"><small>Each game starts with <Badge bg="primary">20 coins</Badge>.</small></p>
             </Card.Body>
           </Card>
 

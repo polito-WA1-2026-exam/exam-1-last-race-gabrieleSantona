@@ -12,7 +12,7 @@ function NavigationBar() {
   }
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/">Last Race 🚇</Navbar.Brand>
         <Navbar.Toggle />

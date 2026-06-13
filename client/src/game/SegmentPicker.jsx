@@ -45,7 +45,7 @@ function SegmentPicker({ segments, route, onAdd, onRemoveLast, startId, destinat
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
       {/* Route chain display */}
-      <div className="mb-3 p-2 bg-light rounded border" style={{ flexShrink: 0 }}>
+      <div className="segment-picker-route mb-3 p-2" style={{ flexShrink: 0 }}>
         <small className="text-muted d-block mb-1">Your route:</small>
         <div className="d-flex flex-wrap align-items-center gap-1">
           {chain.map((sid, idx) => (
