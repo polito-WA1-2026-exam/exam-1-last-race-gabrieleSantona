@@ -15,12 +15,14 @@ import rankingRouter from './routes/ranking.js';
 const app = express();
 const port = 3001;
 
+// Middleware: JSON body parsing, request logging, CORS for Vite dev client
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
 configurePassport(passport);
 
+// Session + Passport session-based authentication
 app.use(session({
   secret: 'lastrace-secret-key',
   resave: false,
@@ -28,11 +30,13 @@ app.use(session({
 }));
 app.use(passport.authenticate('session'));
 
+// API route mounting
 app.use('/api/sessions', authRouter);
 app.use('/api/network',  networkRouter);
 app.use('/api/games',    gameRouter);
 app.use('/api/ranking',  rankingRouter);
 
+// Global error handler — catches errors forwarded via next(err)
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   res.status(status).json({ error: err.message || 'Internal server error' });

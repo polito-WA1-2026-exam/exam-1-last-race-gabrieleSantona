@@ -28,6 +28,7 @@ router.post('/', requireAuth, (req, res) => {
   const allStationIds = [...adjacency.keys()];
   let start, dest;
   let attempts = 0;
+  // Pick random start, run BFS to find candidates ≥3 away; retry up to 200 times
   do {
     start = allStationIds[Math.floor(Math.random() * allStationIds.length)];
     const distances = bfs(start);
@@ -44,9 +45,9 @@ router.post('/', requireAuth, (req, res) => {
 
   const result = db.prepare(
     `INSERT INTO games
-       (user_id, start_id, destination_id, current_station_id, current_line_ids, score, completed_at)
-     VALUES (?, ?, ?, ?, NULL, ?, NULL)`
-  ).run(req.user.id, start, dest, start, INITIAL_COINS);
+       (user_id, start_id, destination_id, score, completed_at)
+     VALUES (?, ?, ?, ?, NULL)`
+  ).run(req.user.id, start, dest, INITIAL_COINS);
 
   const gameId = result.lastInsertRowid;
 
@@ -67,6 +68,7 @@ router.post('/:id/submit-route',
     const gameId           = req.params.id;
     const submittedSegments = req.body.segments;
 
+    // Verify game exists, belongs to the current user, and is still open
     const game = db.prepare('SELECT * FROM games WHERE id = ?').get(gameId);
     if (!game)                        return res.status(404).json({ error: 'Game not found.' });
     if (game.user_id !== req.user.id) return res.status(403).json({ error: 'Forbidden.' });
@@ -80,6 +82,7 @@ router.post('/:id/submit-route',
     ).get(req.user.id, gameId);
     const previousBest = prevRow?.best ?? null;
 
+    // Invalid route: zero score, mark complete, skip execution phase
     if (!valid) {
       db.prepare('UPDATE games SET score = 0, completed_at = ? WHERE id = ?')
         .run(new Date().toISOString(), gameId);
@@ -91,13 +94,15 @@ router.post('/:id/submit-route',
     );
     const events = db.prepare('SELECT * FROM events').all();
     const steps  = [];
-    let coins    = INITIAL_COINS;
+    let coins      = INITIAL_COINS;
+    let finalScore = 0;
 
+    // One random event per segment; running total persisted atomically
     db.transaction(() => {
       for (let i = 0; i < submittedSegments.length; i++) {
         const seg   = submittedSegments[i];
         const event = events[Math.floor(Math.random() * events.length)];
-        coins = Math.max(0, coins + event.effect);
+        coins += event.effect; // running total may go negative; only the final score is clamped
 
         db.prepare(
           `INSERT INTO game_segments (game_id, position, station_a_id, station_b_id, event_id, coins_after)
@@ -112,12 +117,14 @@ router.post('/:id/submit-route',
         });
       }
 
+      // Final score is the remaining coins, clamped to a minimum of 0
+      finalScore = Math.max(0, coins);
       db.prepare('UPDATE games SET score = ?, completed_at = ? WHERE id = ?')
-        .run(coins, new Date().toISOString(), gameId);
+        .run(finalScore, new Date().toISOString(), gameId);
     })();
 
-    const improved = coins > (previousBest ?? 0);
-    return res.json(buildSubmitResponse({ valid: true, steps, finalScore: coins, previousBest, improved }));
+    const improved = finalScore > (previousBest ?? 0);
+    return res.json(buildSubmitResponse({ valid: true, steps, finalScore, previousBest, improved }));
   }
 );
 

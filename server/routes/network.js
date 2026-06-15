@@ -42,6 +42,7 @@ router.get('/segments', requireAuth, (req, res) => {
     db.prepare('SELECT id, name FROM stations').all().map(s => [s.id, s.name])
   );
 
+  // Build line→stations map and count lines per station simultaneously
   const byLine = new Map();
   const stationLineCount = new Map();
   for (const row of lineStations) {
@@ -51,16 +52,7 @@ router.get('/segments', requireAuth, (req, res) => {
     stationLineCount.get(row.station_id).add(row.line_id);
   }
 
-  const segLineMap = new Map();
-  for (const [lineId, stationIds] of byLine) {
-    for (let i = 0; i < stationIds.length - 1; i++) {
-      const a = stationIds[i], b = stationIds[i + 1];
-      const key = `${Math.min(a, b)}-${Math.max(a, b)}`;
-      if (!segLineMap.has(key)) segLineMap.set(key, new Set());
-      segLineMap.get(key).add(lineId);
-    }
-  }
-
+  // Emit only the station pairs (no line attribution): the player must reconstruct the network
   const seen = new Set();
   const segments = [];
   for (const stationIds of byLine.values()) {
@@ -75,7 +67,6 @@ router.get('/segments', requireAuth, (req, res) => {
           station_a_name: stationMap.get(a),
           station_b_id:   b,
           station_b_name: stationMap.get(b),
-          line_ids:       [...segLineMap.get(key)],
         });
       }
     }

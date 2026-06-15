@@ -39,14 +39,12 @@ db.exec(`
   );
 
   CREATE TABLE IF NOT EXISTS games (
-    id                 INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id            INTEGER NOT NULL REFERENCES users(id),
-    start_id           INTEGER NOT NULL REFERENCES stations(id),
-    destination_id     INTEGER NOT NULL REFERENCES stations(id),
-    current_station_id INTEGER NOT NULL REFERENCES stations(id),
-    current_line_ids   TEXT,
-    score              INTEGER NOT NULL DEFAULT 20,
-    completed_at       TEXT
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id        INTEGER NOT NULL REFERENCES users(id),
+    start_id       INTEGER NOT NULL REFERENCES stations(id),
+    destination_id INTEGER NOT NULL REFERENCES stations(id),
+    score          INTEGER NOT NULL DEFAULT 20,
+    completed_at   TEXT
   );
 
   CREATE TABLE IF NOT EXISTS game_segments (
@@ -69,7 +67,7 @@ if (seedNeeded) {
   const insertEvent   = db.prepare('INSERT INTO events (description, effect) VALUES (?, ?)');
   const insertUser    = db.prepare('INSERT INTO users (username, password) VALUES (?, ?)');
   const insertGame    = db.prepare(
-    'INSERT INTO games (user_id, start_id, destination_id, current_station_id, score, completed_at) VALUES (?, ?, ?, ?, ?, ?)'
+    'INSERT INTO games (user_id, start_id, destination_id, score, completed_at) VALUES (?, ?, ?, ?, ?)'
   );
 
   db.transaction(() => {
@@ -132,13 +130,13 @@ if (seedNeeded) {
     insertUser.run('luca',   hash('metro789'));     // id 3
 
     // Game history for marco: scores 15 and 8
-    insertGame.run(1, 2, 8, 8, 15, new Date('2026-05-10T14:30:00Z').toISOString());
-    insertGame.run(1, 2, 4, 4, 8,  new Date('2026-05-12T10:15:00Z').toISOString());
+    insertGame.run(1, 2, 8, 15, new Date('2026-05-10T14:30:00Z').toISOString());
+    insertGame.run(1, 2, 4, 8,  new Date('2026-05-12T10:15:00Z').toISOString());
 
     // Game history for giulia: scores 22, 12, 5
-    insertGame.run(2, 5, 9, 9, 22, new Date('2026-05-08T09:00:00Z').toISOString());
-    insertGame.run(2, 2, 9, 9, 12, new Date('2026-05-14T16:45:00Z').toISOString());
-    insertGame.run(2, 8, 5, 5, 5,  new Date('2026-05-20T11:20:00Z').toISOString());
+    insertGame.run(2, 5, 9, 22, new Date('2026-05-08T09:00:00Z').toISOString());
+    insertGame.run(2, 2, 9, 12, new Date('2026-05-14T16:45:00Z').toISOString());
+    insertGame.run(2, 8, 5, 5,  new Date('2026-05-20T11:20:00Z').toISOString());
   })();
 }
 

@@ -21,7 +21,7 @@ router.post('/',
 
 // DELETE /api/sessions/current — end session and clear session cookie
 router.delete('/current', (req, res) => {
-  req.logout(() => res.end());
+  req.logout(() => res.status(204).end());
 });
 
 // GET /api/sessions/current — return logged-in user or 401 if not authenticated
