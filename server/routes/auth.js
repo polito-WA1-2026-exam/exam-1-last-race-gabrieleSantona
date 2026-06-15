@@ -4,6 +4,7 @@ import { body, validationResult } from 'express-validator';
 
 const router = Router();
 
+// POST /api/sessions — validate credentials and create session; return 401 on auth failure
 router.post('/',
   body('username').isString().trim().notEmpty(),
   body('password').isString().notEmpty(),
@@ -18,10 +19,12 @@ router.post('/',
   }
 );
 
+// DELETE /api/sessions/current — end session and clear session cookie
 router.delete('/current', (req, res) => {
   req.logout(() => res.end());
 });
 
+// GET /api/sessions/current — return logged-in user or 401 if not authenticated
 router.get('/current', (req, res) => {
   if (req.isAuthenticated()) return res.json(req.user);
   res.status(401).json({ error: 'Not authenticated.' });

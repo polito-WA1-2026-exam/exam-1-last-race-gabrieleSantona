@@ -1,6 +1,7 @@
 import { Container, Card, Button, Spinner } from 'react-bootstrap';
 import NetworkMap from './NetworkMap.jsx';
 
+// Display full metro network diagram and "Ready" button to begin planning phase
 function SetupPhase({ network, onReady }) {
   if (!network) {
     return (

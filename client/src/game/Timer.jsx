@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ProgressBar } from 'react-bootstrap';
 
+// Countdown timer visual with progress bar; triggers callback when time expires
 function Timer({ duration, onExpire }) {
   const [timeLeft, setTimeLeft] = useState(duration);
   // Keep a ref to the latest onExpire so the effect never captures a stale version

@@ -4,6 +4,7 @@ import { requireAuth } from '../middleware.js';
 
 const router = Router();
 
+// GET /api/network/full — return all stations and lines with full graph info for setup phase display
 router.get('/full', requireAuth, (req, res) => {
   const stations = db.prepare('SELECT id, name FROM stations ORDER BY id').all();
 
@@ -31,6 +32,7 @@ router.get('/full', requireAuth, (req, res) => {
   res.json({ stations, lines: result });
 });
 
+// GET /api/network/segments — return all segments with station names and interchange station IDs
 router.get('/segments', requireAuth, (req, res) => {
   const lineStations = db.prepare(
     'SELECT line_id, station_id, position FROM line_stations ORDER BY line_id, position'
@@ -86,6 +88,7 @@ router.get('/segments', requireAuth, (req, res) => {
   res.json({ segments, interchanges });
 });
 
+// GET /api/network/stations — return list of all stations with IDs and names
 router.get('/stations', requireAuth, (req, res) => {
   const stations = db.prepare('SELECT id, name FROM stations ORDER BY id').all();
   res.json({ stations });

@@ -2,10 +2,12 @@ import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 
+// Render header navbar with branding, ranking link, and conditional auth buttons (login or logout)
 function NavigationBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  // Sign out user and redirect to home page
   async function handleLogout() {
     await logout();
     navigate('/');

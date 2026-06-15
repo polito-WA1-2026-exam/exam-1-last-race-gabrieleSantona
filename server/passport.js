@@ -2,6 +2,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
 import db from './db.js';
 
+// Setup passport local strategy for credential verification; define serialization/deserialization
 export default function configurePassport(passport) {
   passport.use(new LocalStrategy(async function verify(username, password, cb) {
     const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);

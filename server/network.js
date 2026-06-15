@@ -1,5 +1,6 @@
 import db from './db.js';
 
+// Build in-memory network graph: adjacency, segment lines, real segments, interchanges on startup
 function buildNetworkCache() {
   const rows = db.prepare(
     'SELECT line_id, station_id, position FROM line_stations ORDER BY line_id, position'
@@ -40,6 +41,7 @@ function buildNetworkCache() {
   return { adjacency, segmentLines, realSegments, interchangeSet, stationLineMap };
 }
 
+// Create normalized segment key so min-max pair identifies same segment regardless of direction
 export function segKey(a, b) {
   return `${Math.min(a, b)}-${Math.max(a, b)}`;
 }
@@ -47,6 +49,7 @@ export function segKey(a, b) {
 const cache = buildNetworkCache();
 export const { adjacency, segmentLines, realSegments, interchangeSet, stationLineMap } = cache;
 
+// Breadth-first search to compute minimum distance from start to all reachable stations
 export function bfs(startId) {
   const dist = new Map([[startId, 0]]);
   const queue = [startId];
@@ -59,7 +62,7 @@ export function bfs(startId) {
   return dist;
 }
 
-// Returns Set of line IDs available after arriving at `stationId` via a segment on `linesOfSegment`
+// Determine available lines after arriving at a station; any line if interchange, same line otherwise
 export function nextLineIds(stationId, linesOfSegment) {
   if (interchangeSet.has(stationId)) {
     // At interchange: free to use any line serving this station
@@ -68,9 +71,7 @@ export function nextLineIds(stationId, linesOfSegment) {
   return new Set(linesOfSegment);
 }
 
-// Returns array of station IDs reachable in one move from currentStationId
-// currentLineIds: null = any line (start of game), Set otherwise
-// usedSegmentKeys: Set of "min-max" already used
+// Find neighboring stations accessible via allowed lines and unused segments; null = any line at start
 export function getAvailableNeighbors(currentStationId, currentLineIds, usedSegmentKeys) {
   const neighbors = adjacency.get(currentStationId) || new Set();
   const available = [];
@@ -88,7 +89,7 @@ export function getAvailableNeighbors(currentStationId, currentLineIds, usedSegm
   return available;
 }
 
-// Legacy: full route validation (kept for reference, not used in new flow)
+// Validate entire route: starts/ends correctly, uses real segments, respects line changes, no duplicates
 export function validateRoute(segments, startId, destId) {
   if (!segments || segments.length < 3) return false;
   let currentStation = startId;

@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import RankingPage from './pages/RankingPage.jsx';
 import GamePage from './pages/GamePage.jsx';
 
+// Root app component: wrap with auth provider and setup routes for home, login, ranking, game
 function App() {
   return (
     <AuthProvider>

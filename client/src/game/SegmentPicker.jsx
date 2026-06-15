@@ -1,12 +1,16 @@
 import { ListGroup, Button, Badge } from 'react-bootstrap';
 
+// Normalize segment key so (a,b) and (b,a) produce same string; prevents duplicate segment usage
 function segKey(a, b) {
   return `${Math.min(a, b)}-${Math.max(a, b)}`;
 }
 
+// UI to build a route by selecting segments sequentially; show unused segments and current station chain
 function SegmentPicker({ segments, route, onAdd, onRemoveLast, startId, destinationId }) {
+  // Track which segments are already in the route (prevent reuse)
   const usedKeys = new Set(route.map(s => segKey(s.station_a_id, s.station_b_id)));
 
+  // Determine which station route currently ends at; used to validate next segment connection
   function currentTail() {
     if (route.length === 0) return startId;
     let cur = startId;
@@ -16,10 +20,12 @@ function SegmentPicker({ segments, route, onAdd, onRemoveLast, startId, destinat
     return cur;
   }
 
+  // Verify segment hasn't been used already in the current route
   function canAdd(seg) {
     return !usedKeys.has(segKey(seg.station_a_id, seg.station_b_id));
   }
 
+// Construct ordered list of stations from start through all selected route segments
   function routeStationChain() {
     const chain = [startId];
     let cur = startId;

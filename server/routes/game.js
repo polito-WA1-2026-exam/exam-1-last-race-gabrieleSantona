@@ -8,19 +8,22 @@ const router = Router();
 
 const INITIAL_COINS = 20;
 
+// Fetch station record from DB by ID; used to build game responses with station names
 function stationById(id) {
   return db.prepare('SELECT id, name FROM stations WHERE id = ?').get(id);
 }
 
+// Construct game start response with ID, start/destination stations, and initial coin count
 function buildStartResponse(gameId, start, destination) {
   return { gameId, start, destination, coins: INITIAL_COINS };
 }
 
+// Format route submission result: validity flag, execution steps, final score, previous best, improvement flag
 function buildSubmitResponse({ valid, steps = [], finalScore = 0, previousBest, improved = false }) {
   return { valid, steps, finalScore, previousBest, improved };
 }
 
-// POST /api/games — start a new game
+// POST /api/games — create new game with random start/destination pair ≥3 segments apart
 router.post('/', requireAuth, (req, res) => {
   const allStationIds = [...adjacency.keys()];
   let start, dest;
@@ -50,7 +53,7 @@ router.post('/', requireAuth, (req, res) => {
   res.status(201).json(buildStartResponse(gameId, stationById(start), stationById(dest)));
 });
 
-// POST /api/games/:id/submit-route — validate a planned route and apply events
+// POST /api/games/:id/submit-route — validate route, apply random events, compute final score
 router.post('/:id/submit-route',
   requireAuth,
   param('id').isInt({ min: 1 }).toInt(),

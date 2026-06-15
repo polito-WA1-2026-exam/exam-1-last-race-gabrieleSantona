@@ -2,6 +2,7 @@ import { Badge } from 'react-bootstrap';
 
 // showLines=true → full diagram with colored line rows and interchange markers
 // showLines=false → plain station name grid only
+// Render metro network visualization: full diagram with lines or simplified station badges only
 function NetworkMap({ network, stations, showLines, interchangeIds }) {
   if (showLines) {
     if (!network) return null;

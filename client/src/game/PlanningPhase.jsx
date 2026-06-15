@@ -4,24 +4,29 @@ import Timer from './Timer.jsx';
 import NetworkMap from './NetworkMap.jsx';
 import SegmentPicker from './SegmentPicker.jsx';
 
+// 90-second planning interface: show station list and segment picker to build a route
 function PlanningPhase({ stations, segments, interchanges, start, destination, onSubmit }) {
   const [route, setRoute] = useState([]);
   const submittedRef = useRef(false);
 
+  // Append segment to the current route
   function handleAdd(seg) {
     setRoute(prev => [...prev, seg]);
   }
 
+  // Remove the most recent segment from the route
   function handleRemoveLast() {
     setRoute(prev => prev.slice(0, -1));
   }
 
+  // Submit route to server for validation and execution; guard against double-submission
   function handleSubmit() {
     if (submittedRef.current) return;
     submittedRef.current = true;
     onSubmit(route);
   }
 
+  // Auto-submit route when 90-second timer expires; guard against double-submission
   function handleExpire() {
     if (submittedRef.current) return;
     submittedRef.current = true;

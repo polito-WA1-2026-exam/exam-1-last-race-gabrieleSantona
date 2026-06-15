@@ -3,6 +3,7 @@ import { Container, Button, Card, Row, Col, Badge, Spinner } from 'react-bootstr
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 
+// Landing page with game instructions; redirects logged-in users to /game, shows login prompt to anon
 function HomePage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();

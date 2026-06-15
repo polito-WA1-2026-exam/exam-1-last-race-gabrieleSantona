@@ -72,7 +72,7 @@ All APIs include request validation using `express-validator`. Invalid requests 
 ## Screenshot
 
 ![Ranking Page](./img/ranking.png)
-![Game in Progress](./img/game.png)
+![Game in Progress](./img/in_game.png)
 
 ## Users Credentials
 

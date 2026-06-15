@@ -3,6 +3,7 @@ import { Container, Table, Spinner, Alert, Badge } from 'react-bootstrap';
 import { getRanking } from '../api/api.js';
 import { MEDALS } from '../api/models.js';
 
+// Fetch and display global player rankings sorted by best score descending; show medals for top 3
 function RankingPage() {
   const [ranking, setRanking] = useState([]);
   const [loading, setLoading] = useState(true);

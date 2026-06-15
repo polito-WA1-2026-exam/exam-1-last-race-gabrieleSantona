@@ -3,6 +3,7 @@ import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 
+// Username/password login form; redirects authenticated users to /game, anon to / after logout
 function LoginPage() {
   const { user, loading, login } = useAuth();
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ function LoginPage() {
 
   if (!loading && user) return <Navigate to="/game" replace />;
 
+  // Validate input and attempt login; show error on failure, redirect to /game on success
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');

@@ -2,6 +2,7 @@ import { GameStart, GameResult } from './models.js';
 
 const BASE = 'http://localhost:3001';
 
+// Unified HTTP request handler; includes credentials and JSON serialization for API calls
 async function request(method, path, body) {
   const opts = {
     method,

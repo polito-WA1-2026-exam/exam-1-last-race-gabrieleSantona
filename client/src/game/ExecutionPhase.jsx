@@ -2,12 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Badge, ListGroup } from 'react-bootstrap';
 import { INITIAL_COINS } from '../api/models.js';
 
+// Format event effect as colored badge (+/- coins); neutral at zero
 function effectLabel(effect) {
   if (effect > 0) return <Badge bg="success">+{effect} coins</Badge>;
   if (effect < 0) return <Badge bg="danger">{effect} coins</Badge>;
   return <Badge bg="secondary">±0 coins</Badge>;
 }
 
+// Step-by-step event reveal during journey; show travel log, current coins, and event details
 function ExecutionPhase({ steps, finalScore, onFinish }) {
   const [revealed, setRevealed] = useState(0);
   const logEndRef = useRef(null);
@@ -16,6 +18,7 @@ function ExecutionPhase({ steps, finalScore, onFinish }) {
     logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [revealed]);
 
+  // Show next step in journey; increment revealed counter
   function handleNext() {
     if (revealed < steps.length) setRevealed(r => r + 1);
   }

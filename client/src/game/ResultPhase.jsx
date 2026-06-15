@@ -3,6 +3,7 @@ import { Container, Card, Button, Badge, Table, Spinner } from 'react-bootstrap'
 import { getRanking } from '../api/api.js';
 import { MEDALS } from '../api/models.js';
 
+// Display final score and rankings; show victory card if personal best achieved, normal result otherwise
 function ResultPhase({ score, previousBest, improved, invalidRoute, onPlayAgain }) {
   const [ranking, setRanking]   = useState([]);
   const [loadingRank, setLoadingRank] = useState(false);

@@ -3,6 +3,7 @@ import db from '../db.js';
 
 const router = Router();
 
+// GET /api/ranking — return all players ranked by highest score across completed games
 router.get('/', (req, res) => {
   const ranking = db.prepare(`
     SELECT u.username, MAX(g.score) AS best_score

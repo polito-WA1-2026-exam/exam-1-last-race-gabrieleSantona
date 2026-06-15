@@ -22,6 +22,7 @@ const INITIAL = {
   error:        '',
 };
 
+// Main game orchestrator: manage state across setup, planning, execution, and result phases
 function GamePage() {
   const [state, setState] = useState(INITIAL);
 
@@ -38,6 +39,7 @@ function GamePage() {
       .catch(err => setState(prev => ({ ...prev, error: err.message })));
   }, []);
 
+  // Transition from setup to planning: request random start/destination pair from server
   async function handleReady() {
     setState(prev => ({ ...prev, error: '' }));
     try {
@@ -54,6 +56,7 @@ function GamePage() {
     }
   }
 
+// Submit planned route to server; branch to execution (valid) or result (invalid/incomplete)
   async function handleSubmitRoute(route) {
     setState(prev => ({ ...prev, error: '' }));
     try {
@@ -82,10 +85,12 @@ function GamePage() {
     }
   }
 
+  // Transition from execution to result display after all segments revealed
   function handleFinish() {
     setState(prev => ({ ...prev, phase: 'result' }));
   }
 
+// Reset game state to setup phase while preserving cached network and segment data
   function handlePlayAgain() {
     setState({
       ...INITIAL,
