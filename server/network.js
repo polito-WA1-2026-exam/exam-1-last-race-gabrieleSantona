@@ -50,7 +50,8 @@ export function segKey(a, b) {
 }
 
 const cache = buildNetworkCache();
-export const { adjacency, segmentLines, realSegments, interchangeSet, stationLineMap } = cache;
+export const { adjacency } = cache;
+const { segmentLines, realSegments, interchangeSet } = cache;
 
 // Breadth-first search to compute minimum distance from start to all reachable stations
 export function bfs(startId) {
@@ -63,34 +64,6 @@ export function bfs(startId) {
     }
   }
   return dist;
-}
-
-// Determine available lines after arriving at a station
-export function nextLineIds(stationId, linesOfSegment) {
-  // At interchange: can switch to any line; otherwise must stay on current line(s)
-  if (interchangeSet.has(stationId)) {
-    return new Set(stationLineMap.get(stationId));
-  }
-  return new Set(linesOfSegment);
-}
-
-// Find neighboring stations accessible via allowed lines and unused segments
-export function getAvailableNeighbors(currentStationId, currentLineIds, usedSegmentKeys) {
-  const neighbors = adjacency.get(currentStationId) || new Set();
-  const available = [];
-  for (const nb of neighbors) {
-    const key = segKey(currentStationId, nb);
-    if (usedSegmentKeys.has(key)) continue; // skip already-used segments
-    if (currentLineIds === null) {
-      available.push(nb); // first move: any adjacent station
-    } else {
-      // Check if segment is served by any of the allowed lines
-      const linesForSeg = segmentLines.get(key) || new Set();
-      const hasOverlap = [...currentLineIds].some(l => linesForSeg.has(l));
-      if (hasOverlap) available.push(nb);
-    }
-  }
-  return available;
 }
 
 // Validate entire route: starts/ends correctly, uses real segments, respects line changes, no duplicates
