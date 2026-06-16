@@ -58,7 +58,7 @@ router.post('/', requireAuth, (req, res) => {
 router.post('/:id/submit-route',
   requireAuth,
   param('id').isInt({ min: 1 }).toInt(),
-  body('segments').isArray({ min: 1 }),
+  body('segments').isArray(), // allow empty/incomplete routes through; validateRoute scores them 0
   body('segments.*.station_a_id').isInt({ min: 1 }),
   body('segments.*.station_b_id').isInt({ min: 1 }),
   (req, res) => {
